@@ -47,8 +47,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 #fire-btn{position:fixed;right:18px;bottom:20px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,80,80,0.6),rgba(140,0,0,0.4));border:3px solid rgba(255,70,70,0.7);font-size:32px;display:flex;align-items:center;justify-content:center;z-index:35;pointer-events:all;cursor:pointer;box-shadow:0 0 30px rgba(255,50,50,0.5),inset 0 0 15px rgba(255,100,100,0.2);backdrop-filter:blur(8px);transition:transform 0.06s,box-shadow 0.06s;}
 #fire-btn:active{transform:scale(0.85);box-shadow:0 0 45px rgba(255,50,50,0.9);}
 #reload-btn{position:fixed;right:126px;bottom:40px;width:60px;height:60px;border-radius:50%;background:rgba(255,200,50,0.12);border:2px solid rgba(255,200,50,0.5);font-size:24px;display:flex;align-items:center;justify-content:center;z-index:35;pointer-events:all;cursor:pointer;backdrop-filter:blur(6px);transition:transform 0.1s;box-shadow:0 0 15px rgba(255,200,50,0.2);}
-#reload-btn:active{transform:scale(0.88);}#grenade-btn{position:fixed;right:18px;bottom:130px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,255,100,0.35),rgba(0,80,0,0.35));border:2px solid rgba(0,255,100,0.6);font-size:24px;display:flex;align-items:center;justify-content:center;z-index:35;pointer-events:all;cursor:pointer;backdrop-filter:blur(6px);transition:transform 0.1s;box-shadow:0 0 15px rgba(0,255,100,0.2);}
-#grenade-btn:active{transform:scale(0.88);}
+#reload-btn:active{transform:scale(0.88);}#grenade-btn{position:fixed;right:18px;bottom:130px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,255,100,0.35),rgba(0,80,0,0.35));border:2px solid rgba(0,255,100,0.6);font-size:24px;display:flex;align-items:center;justify-content:center;z-index:35;pointer-events:all;cursor:pointer;backdrop-filter:blur(6px);transition:transform 0.1s;box-shadow:0 0 15px rgba(0,255,100,0.2);}#grenade-btn:active{transform:scale(0.88);}
 #mercenary-btn{position:fixed;right:126px;bottom:110px;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,255,0,0.35),rgba(0,50,0,0.35));border:2px solid rgba(0,255,0,0.6);font-size:16px;display:flex;align-items:center;justify-content:center;z-index:35;pointer-events:all;cursor:pointer;backdrop-filter:blur(6px);transition:transform 0.1s;box-shadow:0 0 15px rgba(0,255,0,0.2);opacity:0.5;}
 #mercenary-btn:active{transform:scale(0.88);}
 #minimap{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:110px;height:110px;border:2px solid rgba(0,200,255,0.5);border-radius:50%;background:rgba(0,0,0,0.8);z-index:25;overflow:hidden;box-shadow:0 0 20px rgba(0,150,255,0.3);}
@@ -95,12 +94,9 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 .inventory-item-btn{background:linear-gradient(135deg,#6af,#48a);color:#000;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:12px;transition:all 0.3s;width:100%;}
 .inventory-item-btn:hover{background:#48a;transform:scale(1.03);box-shadow:0 0 12px rgba(100,180,255,0.4);}
 .inventory-item-btn:disabled{background:#444;color:#888;cursor:not-allowed;transform:none;}
-.inventory-merc-item{min-width:170px;background:rgba(255,255,255,0.03);border:1px solid rgba(0,255,100,0.3);padding:12px;border-radius:10px;text-align:center;transition:all 0.3s;}
-.inventory-merc-item:hover{background:rgba(0,255,100,0.1);border-color:#0f8;}.inventory-merc-name{font-weight:bold;font-size:14px;margin-bottom:6px;color:#0f8;}
-.inventory-merc-desc{font-size:10px;color:#aaa;margin-bottom:6px;}
-.inventory-merc-health{font-size:11px;color:#00ff88;margin-bottom:8px;font-weight:bold;}
-.inventory-merc-btn{background:linear-gradient(135deg,#0f8,#0a0);color:#000;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:12px;transition:all 0.3s;width:100%;}
-.inventory-merc-btn:hover{background:#0a0;transform:scale(1.03);}
+.inventory-merc-item{min-width:170px;background:rgba(255,255,255,0.03);border:1px solid rgba(0,255,100,0.3);padding:12px;border-radius:10px;text-align:center;transition:all 0.3s;}.inventory-merc-item:hover{background:rgba(0,255,100,0.1);border-color:#0f8;}.inventory-merc-name{font-weight:bold;font-size:14px;margin-bottom:6px;color:#0f8;}
+.inventory-merc-desc{font-size:10px;color:#aaa;margin-bottom:6px;}.inventory-merc-health{font-size:11px;color:#00ff88;margin-bottom:8px;font-weight:bold;}
+.inventory-merc-btn{background:linear-gradient(135deg,#0f8,#0a0);color:#000;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:12px;transition:all 0.3s;width:100%;}.inventory-merc-btn:hover{background:#0a0;transform:scale(1.03);}
 .inventory-close{margin-top:20px;padding:12px 30px;background:rgba(255,0,0,0.3);border:1px solid #f00;color:#f00;cursor:pointer;border-radius:8px;font-size:16px;transition:all 0.3s;}
 .inventory-close:hover{background:rgba(255,0,0,0.5);box-shadow:0 0 15px rgba(255,0,0,0.3);}
 #menu{position:fixed;inset:0;background:linear-gradient(135deg,#050510,#0a1525,#050510);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;}
@@ -149,8 +145,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <div class="shop-tab" onclick="switchShopTab('upgrades')">⚙️ ترقيات</div>
 </div>
 <div id="tab-potions" class="shop-tab-content active">
-<div class="shop-item">
-<div class="shop-item-info">
+<div class="shop-item"><div class="shop-item-info">
 <div class="shop-item-name">💚 جرعة صحة كاملة</div><div class="shop-item-desc">تستعيد صحتك إلى 100% فوراً</div>
 <div class="shop-item-price">💰 600 نقطة</div>
 </div><button class="shop-item-btn" onclick="buyHealth()">شراء</button>
@@ -199,8 +194,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <button class="shop-item-btn" id="btn-shotgun" onclick="buyOrEquipWeapon('shotgun')">شراء</button>
 </div>
 <div class="shop-item">
-<div class="shop-item-info"><div class="shop-item-name">🔫 مسدس سريع (SMG)</div>
-<div class="shop-item-desc">إطلاق آلي عند الضغط المطول | ضرر: 18 | ذخيرة: 50/250</div><div class="shop-item-price">💰 3200 نقطة</div>
+<div class="shop-item-info"><div class="shop-item-name">🔫 مسدس سريع (SMG)</div><div class="shop-item-desc">إطلاق آلي عند الضغط المطول | ضرر: 18 | ذخيرة: 50/250</div><div class="shop-item-price">💰 3200 نقطة</div>
 </div>
 <button class="shop-item-btn" id="btn-smg" onclick="buyOrEquipWeapon('smg')">شراء</button>
 </div>
@@ -249,8 +243,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <div class="shop-item-info">
 <div class="shop-item-name">ذخيرة مسدس سريع</div><div class="shop-item-desc">+50 طلقة احتياطية</div><div class="shop-item-price">💰 250 نقطة</div>
 </div>
-<button class="shop-item-btn" onclick="buyWeaponAmmo('smg')">شراء</button>
-</div>
+<button class="shop-item-btn" onclick="buyWeaponAmmo('smg')">شراء</button></div>
 <div class="shop-item" style="padding:10px;margin-bottom:8px;">
 <div class="shop-item-info">
 <div class="shop-item-name">ذخيرة AK-117</div>
@@ -299,8 +292,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 </div>
 </div>
 <div id="inventory-ui">
-<div class="inventory-container">
-<h2>🎒 المخزون الشخصي</h2>
+<div class="inventory-container"><h2>🎒 المخزون الشخصي</h2>
 
 <!-- ===== إضافة جديدة: صندوق السلاح المؤقت ===== -->
 <div id="temp-weapon-section" class="temp-weapon-box" style="display:none;">
@@ -349,8 +341,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <div id="crosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-dot"></div></div>
 <div id="hitmarker">✕</div>
 <div id="hp-wrap">
-<div id="hp-title">HEALTH</div>
-<div id="hp-bar"><div id="hp-fill"></div></div>
+<div id="hp-title">HEALTH</div><div id="hp-bar"><div id="hp-fill"></div></div>
 <div id="hp-num">100</div>
 </div>
 <div id="ammo-wrap"><div id="ammo-main">30</div>
@@ -390,7 +381,8 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 </svg>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ========== OBJECT POOLING SYSTEM ==========class ObjectPool {
+// ========== OBJECT POOLING SYSTEM ==========
+class ObjectPool {
   constructor(createFn, resetFn, initialSize = 20) {
     this.createFn = createFn;
     this.resetFn = resetFn;
@@ -398,8 +390,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
     this.active = [];
     for (let i = 0; i < initialSize; i++) this.pool.push(createFn());
   }
-  get() {
-    const obj = this.pool.length > 0 ? this.pool.pop() : this.createFn();
+  get() {    const obj = this.pool.length > 0 ? this.pool.pop() : this.createFn();
     this.active.push(obj);
     return obj;
   }  release(obj) {
@@ -448,8 +439,7 @@ function playSound(type, params = {}) {
   switch (type) {
     case 'shot': {
       const noise = actx.createBuffer(1, actx.sampleRate * 0.12, actx.sampleRate);
-      const data = noise.getChannelData(0);
-      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3) * 0.7;
+      const data = noise.getChannelData(0);      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3) * 0.7;
       const src = actx.createBufferSource(), gain = actx.createGain(), filter = actx.createBiquadFilter();
       src.buffer = noise; filter.type = 'lowpass'; filter.frequency.value = params.freq || 1200;
       gain.gain.setValueAtTime(0.8, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
@@ -498,8 +488,7 @@ function playSound(type, params = {}) {
     }
     case 'merc': {
       const os = actx.createOscillator(), gn3 = actx.createGain();
-      os.type = 'sine'; os.frequency.setValueAtTime(400, t); os.frequency.linearRampToValueAtTime(700, t + 0.15);
-      gn3.gain.setValueAtTime(0.2, t); gn3.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+      os.type = 'sine'; os.frequency.setValueAtTime(400, t); os.frequency.linearRampToValueAtTime(700, t + 0.15);      gn3.gain.setValueAtTime(0.2, t); gn3.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
       os.connect(gn3); gn3.connect(actx.destination); os.start(); os.stop(t + 0.2);
       break;
     }
@@ -548,8 +537,7 @@ const sun = new THREE.DirectionalLight(0xffeedd, 2.5);
 sun.position.set(10, 20, 10); sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
 sun.shadow.camera.left = -40; sun.shadow.camera.right = 40;
-sun.shadow.camera.top = 40; sun.shadow.camera.bottom = -40;
-sun.shadow.camera.far = 120; sun.shadow.bias = -0.0001;
+sun.shadow.camera.top = 40; sun.shadow.camera.bottom = -40;sun.shadow.camera.far = 120; sun.shadow.bias = -0.0001;
 scene.add(sun);
 const pl1 = new THREE.PointLight(0xff4400, 4.0, 25); pl1.position.set(8, 4, 8); scene.add(pl1);
 const pl2 = new THREE.PointLight(0x3366ff, 4.0, 25); pl2.position.set(-8, 4, -8); scene.add(pl2);
@@ -598,8 +586,7 @@ const sparkPool = new ObjectPool(
   (p) => { p.mesh.visible = false; p.life = 0; }
 );
 
-function sparks(pos, count = 8, col1 = 0xffaa00, col2 = 0xff5500) {
-  for (let i = 0; i < count; i++) {
+function sparks(pos, count = 8, col1 = 0xffaa00, col2 = 0xff5500) {  for (let i = 0; i < count; i++) {
     const p = sparkPool.get();
     p.mesh.visible = true;
     p.mesh.material.color.setHex(Math.random() > 0.5 ? col1 : col2);
@@ -648,8 +635,7 @@ const shells = [];function ejectShell() {
     mesh: shell,
     vel: new THREE.Vector3(side.x * 0.15 + (Math.random() - 0.5) * 0.05, 0.1, side.z * 0.15 + (Math.random() - 0.5) * 0.05),
     life: 60
-  });
-  playSound('shell');
+  });  playSound('shell');
 }
 
 function updateShells() {
@@ -698,8 +684,7 @@ const weapons = {
   'ak47': {name: 'AK-47', damage: 45, fireRate: 12, clipSize: 30, reserve: 150, price: 12000, owned: false, autoFire: true, ammoPrice: 300, color: 0x4488ff, waveLock: 10, currentClip: 30, reserveAmmo: 150, upgrades: {damage: 0, mag: 0, reload: 0}},
   'ak117': {name: 'AK-117', damage: 32, fireRate: 5, clipSize: 40, reserve: 200, price: 8500, owned: false, autoFire: false, ammoPrice: 350, color: 0x8844ff, currentClip: 40, reserveAmmo: 200, upgrades: {damage: 0, mag: 0, reload: 0}},
   'smg': {name: 'مسدس سريع', damage: 18, fireRate: 3, clipSize: 50, reserve: 250, price: 3200, owned: false, autoFire: true, ammoPrice: 250, color: 0x44ff88, currentClip: 50, reserveAmmo: 250, upgrades: {damage: 0, mag: 0, reload: 0}},
-  'm4a1': {name: 'رشاش آلي', damage: 38, fireRate: 8, clipSize: 35, reserve: 175, price: 15000, owned: false, autoFire: true, ammoPrice: 320, color: 0x8888ff, waveLock: 10, currentClip: 35, reserveAmmo: 175, upgrades: {damage: 0, mag: 0, reload: 0}}
-};
+  'm4a1': {name: 'رشاش آلي', damage: 38, fireRate: 8, clipSize: 35, reserve: 175, price: 15000, owned: false, autoFire: true, ammoPrice: 320, color: 0x8888ff, waveLock: 10, currentClip: 35, reserveAmmo: 175, upgrades: {damage: 0, mag: 0, reload: 0}}};
 
 const upgradeDefs = {
   damage: {name: 'زيادة ضرر بسيطة', desc: '+2 ضرر فقط', cost: 1800, max: 3, effect: (w) => { w.damage += 2; }},
@@ -748,8 +733,7 @@ function buyWeapon(key) {
     w.owned = true;
     updateScoreUI();
     equipWeapon(key);
-    document.getElementById(`btn-${key}`).textContent = '✓ مملوك';
-    document.getElementById(`btn-${key}`).disabled = true;
+    document.getElementById(`btn-${key}`).textContent = '✓ مملوك';    document.getElementById(`btn-${key}`).disabled = true;
     playSound('ui', {freq: 900});
     showKillstreak(`🔫 تم شراء ${w.name}!`);
     updateInventoryUI();
@@ -798,8 +782,7 @@ function updateUpgradesTab() {
     const w = weapons[key];
     const item = document.createElement('div');
     item.className = 'shop-item';
-    item.style.flexDirection = 'column';
-    item.style.alignItems = 'flex-start';
+    item.style.flexDirection = 'column';    item.style.alignItems = 'flex-start';
     item.innerHTML = `<div style="font-weight:bold;color:#0f8;margin-bottom:8px">${w.name}</div>`;
     Object.keys(upgradeDefs).forEach(type => {
       const up = upgradeDefs[type], cur = w.upgrades[type] || 0;
@@ -848,8 +831,7 @@ function updateInventoryUI() {
     item.className = 'inventory-item';
     item.innerHTML = `<div class="inventory-item-name">${w.name}</div><div class="inventory-item-desc">ضرر: ${w.damage} | إطلاق: ${w.autoFire ? 'آلي' : 'فردي'}</div><div class="inventory-item-ammo">📦 ${total} طلقة</div><button class="inventory-item-btn" onclick="equipWeapon('${key}')"${currentWeapon === key ? 'disabled' : ''}>${currentWeapon === key ? '✓ مُفعّل' : 'تفعيل'}</button>`;
     wc.appendChild(item);
-  });
-  
+  });  
   const mc = document.getElementById('inventory-mercenaries');
   if (!mc) return;
   mc.innerHTML = '';
@@ -898,8 +880,7 @@ const gs = {
   camYaw: 0, camPitch: 0, damageBoost: false, speedBoost: false, speedBoostTimer: 0,
   armorActive: false, armorTimer: 0, movementEnhanced: false,
   mercenaries: [], mercenaryCount: 0, mercenariesInventory: 0, eliteMercenariesInventory: 0,
-  stepTimer: 0,
-  temporaryWeapon: null
+  stepTimer: 0,  temporaryWeapon: null
 };
 
 const enemies = [], enemyBullets = [], allyBullets = [];
@@ -948,7 +929,6 @@ function mkEnemy(x, z, wave, isArmored = false) {
   scene.add(g);
   enemies.push(en);
 }
-
 function createMercenary(isElite = false) {
   const g = new THREE.Group();
   const bodyColor = isElite ? 0x004400 : 0x008833;
@@ -998,8 +978,7 @@ function shootAllyBullet(startPos, targetPos, merc) {
   playSound('shot', {freq: merc.isElite ? 300 : 250});
 }
 
-function updateAllyBullets() {
-  for (let i = allyBullets.length - 1; i >= 0; i--) {
+function updateAllyBullets() {  for (let i = allyBullets.length - 1; i >= 0; i--) {
     const b = allyBullets[i];
     b.mesh.position.addScaledVector(b.dir, b.speed);
     b.life--;
@@ -1048,8 +1027,7 @@ function updateEnemies() {  enemies.forEach(en => {
         en.stateTimer = 80 + Math.random() * 60;
       } else {
         en.aiState = 'chase';
-        en.stateTimer = 40 + Math.random() * 30;
-      }
+        en.stateTimer = 40 + Math.random() * 30;      }
     }
 
     const p = en.g.position;
@@ -1098,8 +1076,7 @@ function updateEnemies() {  enemies.forEach(en => {
         shootEnemyBullet(en.g.position, targetPos);
       }
     }
-  });
-}
+  });}
 
 function spawnWave(w) {
   let baseCount = 3 + w * 2;
@@ -1148,8 +1125,7 @@ function updateWeather() {
     weatherState.transition = 120;
     weatherState.changeTimer = 400 + Math.random() * 800;
     if (newType === 'storm') weatherState.stormTimer = 200 + Math.random() * 100;
-  }
-  if (weatherState.transition > 0) {
+  }  if (weatherState.transition > 0) {
     weatherState.transition--;
     weatherState.intensity = 1 - weatherState.transition / 120;
   }
@@ -1198,7 +1174,6 @@ function renderRain() {
 }
 
 const ray = new THREE.Raycaster(), AIM = 0.2;
-
 function shoot() {
   if (!gs.running || gs.reloading) return;
   if (gs.ammo <= 0) { startReload(); return; }
@@ -1249,7 +1224,6 @@ function shoot() {
     const crosshairScreen = new THREE.Vector3(0, 0, 0).project(camera);
     const headDist = Math.sqrt(Math.pow(headScreen.x - crosshairScreen.x, 2) + Math.pow(headScreen.y - crosshairScreen.y, 2));
     const isHeadshot = headDist < 0.08;
-
     let dmg = baseDmg + Math.floor(Math.random() * (weapon.damage * 0.3));
     if (isHeadshot) {
       dmg = Math.floor(dmg * 2.5);
@@ -1298,8 +1272,7 @@ function killEnemy(en) {
   d.textContent = `✗ ${KNAMES[gs.kills % KNAMES.length]} ${en.isArmored ? '[المدرع]' : ''} مقتول`;
   f.appendChild(d);
   setTimeout(() => d.remove(), 2500);
-  incrementCombo();
-  checkAchievements();
+  incrementCombo();  checkAchievements();
   if (Math.random() < 0.12 && grenadeCount < 3) { grenadeCount++; updateGrenadeUI(); }
   if (gs.kills % 5 === 0) activatePowerUp();
   
@@ -1348,8 +1321,7 @@ function spawnLoot(pos, forceRarity = null) {
   );
   mesh.position.copy(pos);
   mesh.position.y = 0.5;
-  scene.add(mesh);
-  lootDrops.push({mesh, type, name, effect, spawnTime: Date.now(), duration});
+  scene.add(mesh);  lootDrops.push({mesh, type, name, effect, spawnTime: Date.now(), duration});
 }
 
 function showLootNotification(text, color) {
@@ -1398,8 +1370,7 @@ function updateLoot() {
         
         gs.temporaryWeapon = {
           key: wKey,
-          rarity: rarity,
-          expiry: now + loot.duration,
+          rarity: rarity,          expiry: now + loot.duration,
           prevWeapon: currentWeapon,
           prevAmmo: gs.ammo,
           prevReserve: gs.reserve,
@@ -1448,7 +1419,6 @@ function updateLoot() {
 
 const grenades = [];
 let grenadeCount = 3;
-
 function throwGrenade() {
   if (!gs.running || grenadeCount <= 0) return;
   grenadeCount--;
@@ -1498,8 +1468,7 @@ function explodeGrenade(grenade) {
       enemy.hit = 18;
       showDamageNumber(enemy.g.position.clone().add(new THREE.Vector3(0, 2.5, 0)), damage, false);
       if (enemy.hp <= 0) killEnemy(enemy); else updateEnemyBar(enemy);
-    }
-  });
+    }  });
   scene.remove(grenade.mesh);
   grenades.splice(grenades.indexOf(grenade), 1);
   playSound('explosion');
@@ -1548,8 +1517,7 @@ function closeShop() {
 }
 
 function updateShopScoreUI() {
-  const el = document.getElementById('shop-score-val');
-  if (el) el.textContent = gs.score.toLocaleString();
+  const el = document.getElementById('shop-score-val');  if (el) el.textContent = gs.score.toLocaleString();
 }
 
 function buyHealth() {
@@ -1598,8 +1566,7 @@ function buyMercenary() {
 
 function buyEliteMercenary() {
   if (gs.score >= 2500) {
-    gs.score -= 2500; gs.eliteMercenariesInventory++; updateMercenaryUI(); updateScoreUI(); updateShopScoreUI(); updateInventoryUI();
-    playSound('ui', {freq: 700}); showKillstreak('👑 تم شراء مرتزق النخبة!');
+    gs.score -= 2500; gs.eliteMercenariesInventory++; updateMercenaryUI(); updateScoreUI(); updateShopScoreUI(); updateInventoryUI();    playSound('ui', {freq: 700}); showKillstreak('👑 تم شراء مرتزق النخبة!');
     saveGame();
   } else playSound('ui', {freq: 150});
 }
@@ -1648,8 +1615,7 @@ function updateHpUI() {
   if (f && n) {
     f.style.width = p + '%';
     if (p > 50) { f.style.background = 'linear-gradient(90deg,#00ff88,#00ffc8)'; f.style.boxShadow = '0 0 12px #00ff88'; n.style.color = '#00ff88'; }
-    else if (p > 25) { f.style.background = 'linear-gradient(90deg,#ffaa00,#ffcc00)'; f.style.boxShadow = '0 0 10px #ffaa00'; n.style.color = '#ffaa00'; }
-    else { f.style.background = 'linear-gradient(90deg,#ff2200,#ff6600)'; f.style.boxShadow = '0 0 10px #ff2200'; n.style.color = '#ff4444'; }
+    else if (p > 25) { f.style.background = 'linear-gradient(90deg,#ffaa00,#ffcc00)'; f.style.boxShadow = '0 0 10px #ffaa00'; n.style.color = '#ffaa00'; }    else { f.style.background = 'linear-gradient(90deg,#ff2200,#ff6600)'; f.style.boxShadow = '0 0 10px #ff2200'; n.style.color = '#ff4444'; }
     n.textContent = Math.ceil(gs.hp);
   }
 }
@@ -1699,7 +1665,6 @@ function activatePowerUp() {
     pl1.color.setHex(0xff4400);
   }, 8000);
 }
-
 let comboCount = 0, comboTimer = null;
 function incrementCombo() {
   comboCount++;
@@ -1748,8 +1713,7 @@ function unlockAchievement(key) {
   const ach = achievements[key];
   const popup = document.getElementById('achievement-popup');
   if (popup) {
-    popup.innerHTML = `🏆 ${ach.title}<br><small>${ach.description}</small>`;
-    popup.style.opacity = '1';
+    popup.innerHTML = `🏆 ${ach.title}<br><small>${ach.description}</small>`;    popup.style.opacity = '1';
     popup.style.top = '30px';
     setTimeout(() => { popup.style.opacity = '0'; popup.style.top = '20px'; }, 3000);
   }
@@ -1798,8 +1762,7 @@ document.getElementById('look-area').addEventListener('touchstart', e => {
   if (!look.active) {
     const t = e.changedTouches[0];
     look.active = true; look.id = t.identifier; look.lx = t.clientX; look.ly = t.clientY;
-  }
-}, {passive: true});
+  }}, {passive: true});
 
 function handleFireStart(e) {
   e.preventDefault();
@@ -1848,8 +1811,7 @@ document.addEventListener('keyup', e => {
   if (e.code === 'Space' || e.code === 'KeyF') {
     isFiring = false;
     if (autoFireInterval) { clearInterval(autoFireInterval); autoFireInterval = null; }
-  }
-});
+  }});
 
 document.addEventListener('mousemove', e => {
   if (!gs.running) return;
@@ -1898,8 +1860,7 @@ function updatePlayer() {
   const B = AR - 1.5;
   if (camera.position.x < -B) { camera.position.x = -B; pVelX = 0; }
   if (camera.position.x > B) { camera.position.x = B; pVelX = 0; }
-  if (camera.position.z < -B) { camera.position.z = -B; pVelZ = 0; }
-  if (camera.position.z > B) { camera.position.z = B; pVelZ = 0; }
+  if (camera.position.z < -B) { camera.position.z = -B; pVelZ = 0; }  if (camera.position.z > B) { camera.position.z = B; pVelZ = 0; }
   camera.rotation.order = 'YXZ';
   camera.rotation.y = gs.camYaw;
   camera.rotation.x = gs.camPitch;
@@ -1948,8 +1909,7 @@ function updateMinimap() {
 function shootEnemyBullet(startPos, targetPos) {
   const bulletMesh = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 6), new THREE.MeshBasicMaterial({color: 0xff3300}));
   bulletMesh.position.copy(startPos);
-  bulletMesh.position.y += 1.2;
-  const dir = new THREE.Vector3().copy(targetPos).sub(bulletMesh.position).normalize();
+  bulletMesh.position.y += 1.2;  const dir = new THREE.Vector3().copy(targetPos).sub(bulletMesh.position).normalize();
   scene.add(bulletMesh);
   enemyBullets.push({mesh: bulletMesh, dir, speed: 0.4, life: 130});
   playSound('shot', {freq: 150});
@@ -1998,8 +1958,7 @@ function updateMercenaries() {
           maxThreat = threat;
           target = en;
         }
-      }
-    });
+      }    });
 
     if (target) {
       merc.g.rotation.y = Math.atan2(target.g.position.x - merc.g.position.x, target.g.position.z - merc.g.position.z);
@@ -2048,8 +2007,7 @@ function updateMercenaries() {
         }
       }
     }
-    const hpPct = Math.max(0, merc.hp / merc.maxHp);
-    merc.hpBar.scale.x = hpPct;
+    const hpPct = Math.max(0, merc.hp / merc.maxHp);    merc.hpBar.scale.x = hpPct;
     merc.hpBar.position.x = -(1 - hpPct) * 0.35;
   }
 }
@@ -2098,8 +2056,7 @@ function saveGame() {
     weapons: {},
     achievements: {}
   };
-  Object.keys(weapons).forEach(k => {
-    const w = weapons[k];
+  Object.keys(weapons).forEach(k => {    const w = weapons[k];
     data.weapons[k] = {owned: w.owned, currentClip: w.currentClip, reserveAmmo: w.reserveAmmo, upgrades: w.upgrades};
   });
   Object.keys(achievements).forEach(k => {
@@ -2148,8 +2105,7 @@ function animate() {
       updateLoot();
       updateLights();
       updateEnemyBullets();
-      updateAllyBullets();
-      updateGrenades();
+      updateAllyBullets();      updateGrenades();
       updateMercenaries();
       updateWeather();
       renderRain();
@@ -2198,8 +2154,7 @@ function resetGame() {
   lootDrops.length = 0;
   gs.mercenaries.forEach(m => scene.remove(m.g));
   gs.mercenaries.length = 0;
-  rainDrops.length = 0;
-  sparkPool.releaseAll();
+  rainDrops.length = 0;  sparkPool.releaseAll();
   pVelX = 0; pVelZ = 0;
   
   Object.assign(gs, {
@@ -2248,9 +2203,8 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   resizeRainCanvas();
 });
-
 updateGrenadeUI();
 updateMercenaryUI();
 </script>
 </body>
-</html>
+    </html>
