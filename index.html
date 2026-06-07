@@ -142,11 +142,12 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <h2>⚔️ المتجر العسكري ⚔️</h2>
 <div id="shop-score-display">💰 نقاطك الحالية: <span id="shop-score-val">0</span></div>
 <div class="shop-tabs">
-<div class="shop-tab active" onclick="switchShopTab('potions')">💊 جرعات</div>
-<div class="shop-tab" onclick="switchShopTab('permanent')">🔧 دائم</div>
-<div class="shop-tab" onclick="switchShopTab('weapons')">🔫 أسلحة</div>
-<div class="shop-tab" onclick="switchShopTab('ammo')">📦 ذخيرة</div><div class="shop-tab" onclick="switchShopTab('mercenaries')">👥 المرتزقة</div>
-<div class="shop-tab" onclick="switchShopTab('upgrades')">⚙️ ترقيات</div>
+<div class="shop-tab active" onclick="switchShopTab('potions', event)">💊 جرعات</div>
+<div class="shop-tab" onclick="switchShopTab('permanent', event)">🔧 دائم</div>
+<div class="shop-tab" onclick="switchShopTab('weapons', event)">🔫 أسلحة</div>
+<div class="shop-tab" onclick="switchShopTab('ammo', event)">📦 ذخيرة</div>
+<div class="shop-tab" onclick="switchShopTab('mercenaries', event)">👥 المرتزقة</div>
+<div class="shop-tab" onclick="switchShopTab('upgrades', event)">⚙️ ترقيات</div>
 </div>
 <div id="tab-potions" class="shop-tab-content active">
 <div class="shop-item">
@@ -388,7 +389,8 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <rect x="80" y="78" width="85" height="5" rx="1" fill="#222"/>
 <rect x="55" y="60" width="135" height="4" rx="2" fill="rgba(255,255,255,0.06)"/>
 </svg>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- رابط Three.js بديل مضمون التحميل -->
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script>
 // ========== OBJECT POOLING SYSTEM ==========class ObjectPool {
   constructor(createFn, resetFn, initialSize = 20) {
@@ -1513,11 +1515,25 @@ function updateGrenadeUI() {
   btn.style.opacity = grenadeCount > 0 ? '1' : '0.5';
 }
 
-function switchShopTab(name) {
+// ===== إصلاح دالة switchShopTab لتجنب خطأ event =====
+function switchShopTab(name, e) {
   document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.shop-tab-content').forEach(c => c.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  document.getElementById(`tab-${name}`).classList.add('active');  if (name === 'permanent') {
+  // نستخدم الوسيط e إذا وُجد
+  if (e && e.currentTarget) {
+    e.currentTarget.classList.add('active');
+  } else {
+    // في حالة الاستدعاء بدون حدث (مثلاً من openShop) نبحث عن التبويب المناسب ونضيف له الكلاس
+    document.querySelectorAll('.shop-tab').forEach(tab => {
+      if (tab.getAttribute('onclick') && tab.getAttribute('onclick').includes(`'${name}'`)) {
+        tab.classList.add('active');
+      }
+    });
+  }
+  const tabContent = document.getElementById(`tab-${name}`);
+  if (tabContent) tabContent.classList.add('active');
+  
+  if (name === 'permanent') {
     const el = document.getElementById('maxhp-display');
     if (el) el.textContent = gs.maxHp;
   }
@@ -1539,7 +1555,7 @@ function openShop() {
   gs.running = false;
   updateShopScoreUI();
   document.getElementById('shop-ui').style.display = 'flex';
-  switchShopTab('potions');
+  switchShopTab('potions'); // سيعمل بدون event، وسيتم التعامل معه في else
 }
 
 function closeShop() {
@@ -2253,4 +2269,4 @@ updateGrenadeUI();
 updateMercenaryUI();
 </script>
 </body>
-</html>
+    </html>
