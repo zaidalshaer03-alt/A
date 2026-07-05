@@ -71,7 +71,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 .upgrade-shop-btn{background:#ffd700;color:#000;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-weight:bold;font-size:12px;transition:all 0.2s;}
 .upgrade-shop-btn:hover{transform:scale(1.05);}
 .upgrade-shop-btn:disabled{background:#444;color:#888;cursor:not-allowed;transform:none;}
-.shop-scroll-content{padding:20px;padding-bottom:100px;max-height:70vh;overflow-y:auto;}
+.shop-scroll-content{padding:20px;padding-bottom:120px;max-height:70vh;overflow-y:auto;}
 .shop-scroll-content::-webkit-scrollbar{width:6px;}
 .shop-scroll-content::-webkit-scrollbar-track{background:#111;}
 .shop-scroll-content::-webkit-scrollbar-thumb{background:#0f8;border-radius:3px;}
@@ -181,7 +181,20 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 .headshot-text{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);font-size:32px;font-weight:900;color:#ff0;text-shadow:0 0 20px #ff0,0 0 40px #f80;pointer-events:none;z-index:46;animation:headshotAnim 1s forwards;letter-spacing:4px;}
 @keyframes headshotAnim{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5);}20%{opacity:1;transform:translate(-50%,-50%) scale(1.3);}100%{opacity:0;transform:translate(-50%,-50%) scale(1);}}
 #loot-notification{position:fixed;top:35%;left:50%;transform:translateX(-50%);font-size:22px;font-weight:bold;padding:12px 24px;border-radius:10px;opacity:0;pointer-events:none;z-index:55;transition:opacity 0.3s,transform 0.3s;text-align:center;background:rgba(0,0,0,0.85);border:2px solid;backdrop-filter:blur(5px);}
-</style>
+
+/* ===== نافذة التأكيد المخصصة ===== */
+#confirm-dialog{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:2000;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.confirm-box{background:linear-gradient(135deg,#0a0a0a,#1a1a1a);border:2px solid #0f8;padding:30px;border-radius:15px;max-width:450px;width:90%;color:#fff;text-align:center;box-shadow:0 0 40px rgba(0,255,136,0.3);}
+.confirm-box h3{color:#0f8;font-size:20px;margin-bottom:15px;}
+.confirm-box p{color:#ccc;font-size:14px;line-height:1.8;margin-bottom:20px;white-space:pre-line;text-align:right;}
+.confirm-buttons{display:flex;gap:15px;justify-content:center;}
+.confirm-yes{background:linear-gradient(135deg,#0f8,#0a0);color:#000;border:none;padding:12px 30px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:14px;transition:all 0.2s;}
+.confirm-yes:hover{transform:scale(1.05);}
+.confirm-no{background:rgba(255,0,0,0.2);color:#f00;border:1px solid #f00;padding:12px 30px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:14px;transition:all 0.2s;}
+.confirm-no:hover{background:rgba(255,0,0,0.4);}
+.confirm-box.danger{border-color:#ffaa00;}
+.confirm-box.danger h3{color:#ffaa00;}
+.confirm-box.danger .confirm-yes{background:linear-gradient(135deg,#ffaa00,#ff6600);}</style>
 </head>
 <body>
 <button id="shop-open-btn" onclick="openShop()">🛒 المتجر</button>
@@ -191,10 +204,24 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
     <div class="merc-cmd-btn attack" onclick="commandAllMercs('attack')" title="نيران مركزة">🎯</div>
     <div class="merc-cmd-btn defend" onclick="commandAllMercs('defend')" title="تمركز وحماية">🛡️</div>
 </div>
+
+<!-- ===== نافذة التأكيد المخصصة ===== -->
+<div id="confirm-dialog">
+    <div class="confirm-box" id="confirm-box">
+        <h3 id="confirm-title">تأكيد</h3>
+        <p id="confirm-message"></p>
+        <div class="confirm-buttons">
+            <button class="confirm-yes" id="confirm-yes">نعم</button>
+            <button class="confirm-no" id="confirm-no">إلغاء</button>
+        </div>
+    </div>
+</div>
+
 <div id="shop-ui">
 <div class="shop-container">
     <div class="shop-sticky-header">
-        <h2>⚔️ المتجر العسكري ⚔️</h2>        <div id="shop-score-display">💰 نقاطك الحالية: <span id="shop-score-val">0</span></div>
+        <h2>⚔️ المتجر العسكري ⚔️</h2>
+        <div id="shop-score-display">💰 نقاطك الحالية: <span id="shop-score-val">0</span></div>
         <div class="shop-level-bar">
             <span class="shop-level-text">مستوى المتجر: <span id="shop-level-display">1</span>/3</span>
             <button id="upgrade-shop-btn" class="upgrade-shop-btn" onclick="upgradeShop()">ترقية المتجر 💰</button>
@@ -216,8 +243,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
         <div class="shop-section">
             <div class="section-title">👥 المرتزقة والدروع</div>
             <div id="mercs-list-container"></div>
-        </div>
-    </div>
+        </div>    </div>
 </div>
 <button class="shop-close" onclick="closeShop()">❌ العودة للقتال</button>
 </div>
@@ -243,7 +269,8 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
     <div class="armor-equip-header">
         <span>🛡️ الدرع المُجهز:</span>
         <span id="equipped-armor-name" style="color:#fff;">لا يوجد</span>
-    </div>    <div id="owned-armors-list"></div>
+    </div>
+    <div id="owned-armors-list"></div>
 </div>
 </div>
 <button class="inventory-close" onclick="closeInventory()">❌ إغلاق المخزون</button>
@@ -265,8 +292,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
             <div id="reserve-mercs-list"></div>
         </div>
     </div>
-</div>
-<button class="shop-close" style="border-color:#f00;color:#f00;" onclick="closeMercenaryUI()">❌ إغلاق</button>
+</div><button class="shop-close" style="border-color:#f00;color:#f00;" onclick="closeMercenaryUI()">❌ إغلاق</button>
 </div>
 <div id="menu">
 <h1>SHADOW OPS</h1>
@@ -282,8 +308,8 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <div class="go-r">النقاط: <span id="go-score">0</span></div>
 <div class="go-s">الموجة: <span id="go-wave">1</span></div>
 <button id="retry-btn" onclick="retryGame()">↺ إعادة المحاولة</button>
-<button id="new-game-btn" onclick="newGame()">🔄 لعبة جديدة</button>
-<button id="reset-all-btn" onclick="resetAllProgress()">🗑️ مسح كل التقدم</button>
+<button id="new-game-btn" onclick="showNewGameConfirm()">🔄 لعبة جديدة</button>
+<button id="reset-all-btn" onclick="showResetConfirm()">🗑️ مسح كل التقدم</button>
 </div>
 <div id="wave-notif"></div>
 <div id="power-up-ui">🔥 DAMAGE BOOST ACTIVE 🔥</div>
@@ -292,7 +318,8 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 <div id="storm-flash"></div>
 <div id="vignette"></div><div id="dmg-flash"></div>
 <div id="fire-flash"></div>
-<div id="loot-notification"></div><div id="hud">
+<div id="loot-notification"></div>
+<div id="hud">
 <div id="crosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-dot"></div></div>
 <div id="hitmarker">✕</div>
 <div id="hp-wrap">
@@ -314,8 +341,7 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 </div>
 <div id="killfeed"></div>
 <div id="killstreak-ui"></div>
-<div id="combo-counter"></div>
-<div id="achievement-popup"></div>
+<div id="combo-counter"></div><div id="achievement-popup"></div>
 <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
 </div><div id="minimap"><canvas id="minimap-canvas" width="110" height="110"></canvas></div>
 <div id="joy-area"><div id="joy-ring"><div id="joy-knob"></div></div></div>
@@ -341,7 +367,103 @@ body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-a
 </svg>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-class ObjectPool {  constructor(createFn, resetFn, initialSize = 20) {
+// ========== نظام نافذة التأكيد المخصصة ==========
+let confirmCallback = null;
+
+function showConfirmDialog(title, message, callback, isDanger = false) {
+  const dialog = document.getElementById('confirm-dialog');
+  const box = document.getElementById('confirm-box');
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-message').textContent = message;
+  
+  if (isDanger) {
+    box.classList.add('danger');
+  } else {
+    box.classList.remove('danger');
+  }
+  
+  confirmCallback = callback;
+  dialog.style.display = 'flex';
+}
+
+function hideConfirmDialog() {
+  document.getElementById('confirm-dialog').style.display = 'none';
+  confirmCallback = null;
+}
+document.getElementById('confirm-yes').addEventListener('click', function() {
+  if (confirmCallback) {
+    confirmCallback();
+  }
+  hideConfirmDialog();
+});
+
+document.getElementById('confirm-no').addEventListener('click', function() {
+  hideConfirmDialog();
+});
+
+// ========== دوال الأزرار الجديدة ==========
+function showNewGameConfirm() {
+  showConfirmDialog(
+    '🔄 لعبة جديدة',
+    '✅ ستحتفظ بـ:\n- جميع الأسلحة المشتراة\n- الترقيات (الملحقات)\n- الإنجازات\n- المرتزقة في المخزون\n- مستوى المتجر والدروع\n\n❌ سيتم تصفير:\n- الموجة → 1\n- النقاط → 0\n- القتلى → 0',
+    function() {
+      gs.wave = 1;
+      gs.score = 0;
+      gs.kills = 0;
+      gs.hp = gs.maxHp;
+      gs.mercenaries = [];
+      gs.mercenaryCount = 0;
+      Object.keys(weapons).forEach(key => {
+        const w = weapons[key];
+        if (w.owned) {
+          w.currentClip = w.clipSize;
+          w.reserveAmmo = w.reserve;
+        }
+      });
+      saveGame();
+      document.getElementById('gameover').style.display = 'none';
+      resetGame();
+    },
+    false
+  );
+}
+
+function showResetConfirm() {
+  showConfirmDialog(
+    '🗑️ مسح كل التقدم',
+    '⚠️ تحذير: سيتم مسح كل التقدم نهائياً!\n\nسيتم حذف:\n- جميع الأسلحة المشتراة\n- جميع الترقيات\n- جميع الإنجازات\n- جميع المرتزقة\n- النقاط والمستوى\n- مستوى المتجر والدروع\n\nهل أنت متأكد؟',
+    function() {
+      try { localStorage.removeItem('shadowOps_save'); } catch(e) {}
+      gs.score = 0;
+      gs.wave = 1;
+      gs.kills = 0;
+      gs.maxHp = 100;
+      gs.hp = 100;
+      gs.movementEnhanced = false;      gs.mercenariesInventory = 0;
+      gs.eliteMercenariesInventory = 0;
+      gs.mercenaries = [];
+      gs.mercenaryCount = 0;
+      gs.shopLevel = 1;
+      gs.armors = [];
+      Object.keys(weapons).forEach(key => {
+        const w = weapons[key];
+        w.owned = (key === 'pistol');
+        w.currentClip = w.clipSize;
+        w.reserveAmmo = w.reserve;
+        w.upgrades = {damage: 0, mag: 0, reload: 0};
+      });
+      Object.keys(achievements).forEach(k => {
+        achievements[k].unlocked = false;
+      });
+      document.getElementById('gameover').style.display = 'none';
+      resetGame();
+    },
+    true
+  );
+}
+
+class ObjectPool {
+  constructor(createFn, resetFn, initialSize = 20) {
     this.createFn = createFn; this.resetFn = resetFn; this.pool = []; this.active = [];
     for (let i = 0; i < initialSize; i++) this.pool.push(createFn());
   }
@@ -366,8 +488,7 @@ camera.position.set(0, 1.8, 0);
 let pVelX = 0, pVelZ = 0;
 const FRICTION = 0.82;
 let shake = 0, swayX = 0, swayY = 0;
-const viewDir = new THREE.Vector3(), sideDir = new THREE.Vector3();
-let isFiring = false, autoFireInterval = null;
+const viewDir = new THREE.Vector3(), sideDir = new THREE.Vector3();let isFiring = false, autoFireInterval = null;
 let actx = null;
 
 function initAudio() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -390,7 +511,8 @@ function playSound(type, params = {}) {
       o.type = 'sine'; o.frequency.setValueAtTime(1200, t); o.frequency.exponentialRampToValueAtTime(2400, t + 0.08);
       g.gain.setValueAtTime(0.4, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
       o.connect(g); g.connect(actx.destination); o.start(); o.stop(t + 0.15); break;
-    }    case 'hit': {
+    }
+    case 'hit': {
       const o1 = actx.createOscillator(), g1 = actx.createGain();
       o1.type = 'square'; o1.frequency.setValueAtTime(220, t); o1.frequency.exponentialRampToValueAtTime(80, t + 0.08);
       g1.gain.setValueAtTime(0.3, t); g1.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
@@ -415,8 +537,7 @@ function playSound(type, params = {}) {
     }
     case 'ui': {
       const osc = actx.createOscillator(), gn2 = actx.createGain();
-      osc.type = 'sine'; osc.frequency.value = params.freq || 600;
-      gn2.gain.setValueAtTime(0.15, t); gn2.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      osc.type = 'sine'; osc.frequency.value = params.freq || 600;      gn2.gain.setValueAtTime(0.15, t); gn2.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
       osc.connect(gn2); gn2.connect(actx.destination); osc.start(); osc.stop(t + 0.06); break;
     }
     case 'merc': {
@@ -439,7 +560,8 @@ function playSound(type, params = {}) {
       src.buffer = noise; filter.type = 'lowpass'; filter.frequency.value = 300;
       gain.gain.setValueAtTime(0.1, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
       src.connect(filter); filter.connect(gain); gain.connect(actx.destination); src.start(); break;
-    }    case 'shell': {
+    }
+    case 'shell': {
       const o = actx.createOscillator(), g = actx.createGain();
       o.type = 'sine'; o.frequency.setValueAtTime(3000, t); o.frequency.exponentialRampToValueAtTime(1000, t + 0.08);
       g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
@@ -465,7 +587,6 @@ function playSound(type, params = {}) {
     }
   }
 }
-
 scene.add(new THREE.AmbientLight(0x304060, 2.0));
 const sun = new THREE.DirectionalLight(0xffeedd, 2.5);
 sun.position.set(10, 20, 10); sun.castShadow = true;
@@ -488,7 +609,8 @@ function box(w, h, d, x, y, z, c = 0x1a1a2a) {
   colliders.push({min: {x: x - w/2, z: z - d/2}, max: {x: x + w/2, z: z + d/2}});
   return m;
 }
-box(AR * 2, WH, 1.5, 0, WH/2, -AR); box(AR * 2, WH, 1.5, 0, WH/2, AR);box(1.5, WH, AR * 2, -AR, WH/2, 0); box(1.5, WH, AR * 2, AR, WH/2, 0);
+box(AR * 2, WH, 1.5, 0, WH/2, -AR); box(AR * 2, WH, 1.5, 0, WH/2, AR);
+box(1.5, WH, AR * 2, -AR, WH/2, 0); box(1.5, WH, AR * 2, AR, WH/2, 0);
 const pillarPositions = [[-22,-22],[22,-22],[-22,22],[22,22],[-22,0],[22,0],[0,-22],[0,22],[-15,15],[15,-15],[-15,-15],[15,15]];
 pillarPositions.forEach(([x, z]) => {
   const p = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.7, WH, 8), new THREE.MeshStandardMaterial({color: 0x1a1a2e, roughness: 0.5, metalness: 0.5}));
@@ -513,7 +635,6 @@ const sparkPool = new ObjectPool(() => {
   const m = new THREE.Mesh(new THREE.SphereGeometry(0.04, 4, 4), new THREE.MeshBasicMaterial({transparent: true}));
   scene.add(m); return {mesh: m, vel: new THREE.Vector3(), life: 0};
 }, (p) => { p.mesh.visible = false; p.life = 0; });
-
 function sparks(pos, count = 8, col1 = 0xffaa00, col2 = 0xff5500) {
   for (let i = 0; i < count; i++) {
     const p = sparkPool.get(); p.mesh.visible = true;
@@ -537,7 +658,8 @@ function updateParts() {
 }
 
 const muzzleFlash = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), new THREE.MeshBasicMaterial({color: 0xffaa00, transparent: true, opacity: 0}));
-muzzleFlash.position.set(0, 1.5, -1); camera.add(muzzleFlash); scene.add(camera);let muzzleTimer = 0;
+muzzleFlash.position.set(0, 1.5, -1); camera.add(muzzleFlash); scene.add(camera);
+let muzzleTimer = 0;
 const shells = [];
 function ejectShell() {
   const shell = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.08, 6), new THREE.MeshStandardMaterial({color: 0xffcc00, metalness: 0.9, roughness: 0.2}));
@@ -562,8 +684,7 @@ function showDamageNumber(pos, damage, isHeadshot = false) {
   if (projected.z > 1) return;
   const x = (projected.x * 0.5 + 0.5) * window.innerWidth;
   const y = (-projected.y * 0.5 + 0.5) * window.innerHeight;
-  const div = document.createElement('div');
-  div.className = 'damage-number'; div.textContent = Math.floor(damage);
+  const div = document.createElement('div');  div.className = 'damage-number'; div.textContent = Math.floor(damage);
   div.style.left = x + 'px'; div.style.top = y + 'px';
   div.style.fontSize = isHeadshot ? '24px' : '16px'; div.style.color = isHeadshot ? '#ff0' : '#fff';
   document.body.appendChild(div); setTimeout(() => div.remove(), 1000);
@@ -587,6 +708,7 @@ const upgradeDefs = {
   mag: {name: 'ملحق: مخزن موسع', desc: '+5 طلقات لهذا السلاح', cost: 1500, max: 2, effect: (w) => { w.clipSize += 5; w.reserve += 5; }},
   reload: {name: 'ملحق: تعمير أسرع', desc: '-8% وقت التعمير', cost: 1200, max: 2, effect: (w) => {}}
 };
+
 const armorTypes = {
   leather: {name: 'درع جلدي', reduction: 0.2, maxHp: 40, price: 900, icon: '🛡️'},
   iron: {name: 'درع حديدي', reduction: 0.5, maxHp: 100, price: 2200, icon: '🛡️'}
@@ -611,8 +733,7 @@ function buyWeapon(key) {
   } else if (w.owned) equipWeapon(key); else playSound('ui', {freq: 150});
 }
 function buyWeaponAmmo(key) {
-  const w = weapons[key];
-  if (gs.score >= w.ammoPrice) {
+  const w = weapons[key];  if (gs.score >= w.ammoPrice) {
     gs.score -= w.ammoPrice; w.reserveAmmo += w.clipSize;
     if (key === currentWeapon) { gs.reserve = w.reserveAmmo; updateAmmoUI(); }
     updateScoreUI(); updateInventoryUI(); updateShopScoreUI();
@@ -635,7 +756,8 @@ function getShopUpgradeCost(level) {
   return 0;
 }
 
-function upgradeShop() {  const cost = getShopUpgradeCost(gs.shopLevel);
+function upgradeShop() {
+  const cost = getShopUpgradeCost(gs.shopLevel);
   if (cost === 0 || gs.score < cost) {
     playSound('ui', {freq: 150});
     return;
@@ -660,8 +782,7 @@ function renderShop() {
   if (gs.shopLevel >= 3) {
     upgradeBtn.textContent = '✓ الحد الأقصى';
     upgradeBtn.disabled = true;
-  } else {
-    upgradeBtn.textContent = `ترقية (${cost} 💰)`;
+  } else {    upgradeBtn.textContent = `ترقية (${cost} 💰)`;
     upgradeBtn.disabled = gs.score < cost;
   }
 
@@ -684,7 +805,8 @@ function renderShop() {
       <div class="shop-item-info">
         <div class="shop-item-name">⚡ جرعة سرعة</div>
         <div class="shop-item-desc">تزيد سرعتك بنسبة ${speedPercent}% لمدة ${speedDuration} ثانية</div>
-        <div class="shop-item-price">💰 500 نقطة</div>      </div>
+        <div class="shop-item-price">💰 500 نقطة</div>
+      </div>
       <button class="shop-item-btn" onclick="buySpeedBoost()">شراء</button>
     </div>
   `;
@@ -709,8 +831,7 @@ function renderShopWeapons() {
         <span class="weapon-name">${w.name}</span>
         <span class="weapon-stats">ضرر: ${w.damage} | مخزن: ${w.clipSize}</span>
     </div>`;
-    
-    if (w.owned) {
+        if (w.owned) {
       html += `<div class="weapon-upgrades">`;
       Object.keys(upgradeDefs).forEach(type => {
         const up = upgradeDefs[type];
@@ -733,7 +854,8 @@ function renderShopWeapons() {
       html += `<button class="shop-item-btn" style="width:100%;margin-top:10px;" 
           onclick="buyWeapon('${key}')">
           شراء بـ ${w.price} 💰
-      </button>`;    }
+      </button>`;
+    }
     card.innerHTML = html;
     container.appendChild(card);
   });
@@ -758,8 +880,7 @@ function renderShopAmmo() {
         <button class="shop-item-btn" onclick="buyWeaponAmmo('${key}')">شراء</button>
     `;
     container.appendChild(item);
-  });
-}
+  });}
 
 function renderShopMercsAndArmor() {
   const container = document.getElementById('mercs-list-container');
@@ -782,7 +903,8 @@ function renderShopMercsAndArmor() {
         <div class="shop-item-name">👑 مرتزق النخبة (Elite)</div>
         <div class="shop-item-desc">لون أخضر غامق، صحة: 300+الموجة×12، ضرر: 60-85</div>
         <div class="shop-item-price">💰 2500 نقطة</div>
-      </div>      <button class="shop-item-btn" onclick="buyEliteMercenary()">شراء</button>
+      </div>
+      <button class="shop-item-btn" onclick="buyEliteMercenary()">شراء</button>
     </div>`;
   }
   
@@ -807,8 +929,7 @@ function renderShopMercsAndArmor() {
         <div class="shop-item-price">💰 2200 نقطة</div>
       </div>
       <button class="shop-item-btn" onclick="buyArmor('iron')">شراء</button>
-    </div>`;
-  }
+    </div>`;  }
   
   container.innerHTML = html;
 }
@@ -831,7 +952,8 @@ function buyArmor(type) {
 }
 
 function equipArmor(index) {
-  if (index < 0 || index >= gs.armors.length) return;  gs.armors.forEach(a => a.equipped = false);
+  if (index < 0 || index >= gs.armors.length) return;
+  gs.armors.forEach(a => a.equipped = false);
   gs.armors[index].equipped = true;
   updateInventoryUI();
   updateArmorUI();
@@ -856,8 +978,7 @@ function updateArmorUI() {
   }
 }
 
-function openInventory() { if (!gs.running) return; gs.running = false; document.getElementById('inventory-ui').style.display = 'flex'; updateInventoryUI(); }
-function closeInventory() { gs.running = true; document.getElementById('inventory-ui').style.display = 'none'; }
+function openInventory() { if (!gs.running) return; gs.running = false; document.getElementById('inventory-ui').style.display = 'flex'; updateInventoryUI(); }function closeInventory() { gs.running = true; document.getElementById('inventory-ui').style.display = 'none'; }
 
 function updateInventoryUI() {
   const wc = document.getElementById('inventory-weapons');
@@ -880,7 +1001,8 @@ function updateInventoryUI() {
   
   const grenadeCountEl = document.getElementById('inv-grenade-count');
   if (grenadeCountEl) grenadeCountEl.textContent = grenadeCount;
-    const equippedArmor = gs.armors.find(a => a.equipped && a.hp > 0);
+  
+  const equippedArmor = gs.armors.find(a => a.equipped && a.hp > 0);
   const equippedNameEl = document.getElementById('equipped-armor-name');
   if (equippedNameEl) {
     if (equippedArmor) {
@@ -905,8 +1027,7 @@ function updateInventoryUI() {
         const armorType = armorTypes[armor.type];
         const div = document.createElement('div');
         div.className = 'armor-item';
-        div.innerHTML = `
-          <div class="armor-info">
+        div.innerHTML = `          <div class="armor-info">
             ${armorType.icon} ${armorType.name} (-${armorType.reduction * 100}% ضرر)
             <small>صحة: ${Math.ceil(armor.hp)}/${armor.maxHp}</small>
           </div>
@@ -930,6 +1051,7 @@ function closeMercenaryUI() {
   gs.running = true;
   document.getElementById('mercenary-ui').style.display = 'none';
 }
+
 function updateMercenaryManagementUI() {
   const activeList = document.getElementById('active-mercs-list');
   if (!activeList) return;
@@ -954,8 +1076,7 @@ function updateMercenaryManagementUI() {
         </div>
         <div class="merc-cmd-row">
           <button class="merc-cmd attack ${cmd === 'attack' ? 'active' : ''}" onclick="setMercCommand(${idx}, 'attack')">⚔️ هجوم</button>
-          <button class="merc-cmd defend ${cmd === 'defend' ? 'active' : ''}" onclick="setMercCommand(${idx}, 'defend')">🛡️ دفاع</button>
-          <button class="merc-cmd retreat ${cmd === 'retreat' ? 'active' : ''}" onclick="setMercCommand(${idx}, 'retreat')">🏃 انسحاب</button>
+          <button class="merc-cmd defend ${cmd === 'defend' ? 'active' : ''}" onclick="setMercCommand(${idx}, 'defend')">🛡️ دفاع</button>          <button class="merc-cmd retreat ${cmd === 'retreat' ? 'active' : ''}" onclick="setMercCommand(${idx}, 'retreat')">🏃 انسحاب</button>
         </div>
       `;
       activeList.appendChild(div);
@@ -978,7 +1099,8 @@ function updateMercenaryManagementUI() {
           <div class="merc-header">
             <span class="merc-name">👥 مرتزق عادي</span>
             <span class="merc-hp">في الانتظار</span>
-          </div>          <button class="shop-item-btn" style="width:100%;" onclick="deployReserveMerc('normal')">🚀 نشر في الميدان</button>
+          </div>
+          <button class="shop-item-btn" style="width:100%;" onclick="deployReserveMerc('normal')">🚀 نشر في الميدان</button>
         `;
         reserveList.appendChild(div);
       }
@@ -1003,8 +1125,7 @@ function updateMercenaryManagementUI() {
 function setMercCommand(idx, cmd) {
   if (idx < 0 || idx >= gs.mercenaries.length) return;
   const merc = gs.mercenaries[idx];
-  if (!merc || !merc.alive) return;
-  
+  if (!merc || !merc.alive) return;  
   if (merc.command === cmd) {
     merc.command = 'auto';
     merc.commandTimer = 0;
@@ -1027,7 +1148,8 @@ function commandAllMercs(cmd) {
       showMercCommandIcon(merc);
       count++;
     }
-  });  if (count > 0) {
+  });
+  if (count > 0) {
     updateMercenaryManagementUI();
     playSound('ui', {freq: 800});
     showKillstreak(cmd === 'attack' ? '🎯 نيران مركزة!' : '🛡️ تمركز وحماية!');
@@ -1052,7 +1174,6 @@ function deployReserveMerc(type) {
   updateMercenaryManagementUI();
   saveGame();
 }
-
 function showMercCommandIcon(merc) {
   if (merc.commandIcon && merc.commandIcon.parentNode) {
     merc.commandIcon.parentNode.removeChild(merc.commandIcon);
@@ -1076,7 +1197,8 @@ function showMercCommandIcon(merc) {
     icon.style.opacity = '1';
     merc.iconUpdateId = requestAnimationFrame(updatePos);
   };
-  updatePos();  
+  updatePos();
+  
   setTimeout(() => {
     if (icon.parentNode) icon.parentNode.removeChild(icon);
     if (merc.iconUpdateId) cancelAnimationFrame(merc.iconUpdateId);
@@ -1101,8 +1223,7 @@ function calcStat(base, perWave, wave) { return base + getBlock(wave) * Math.rou
 function mkEnemy(x, z, wave, isArmored = false) {
   const g = new THREE.Group();
   const color = isArmored ? 0x4466ff : 0x881111;
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(isArmored ? 0.45 : 0.35, isArmored ? 0.5 : 0.4, isArmored ? 1.4 : 1.2, 8), new THREE.MeshStandardMaterial({color, roughness: 0.4, metalness: isArmored ? 0.7 : 0.5}));
-  body.position.y = isArmored ? 1.3 : 1.2; body.castShadow = true; g.add(body);
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(isArmored ? 0.45 : 0.35, isArmored ? 0.5 : 0.4, isArmored ? 1.4 : 1.2, 8), new THREE.MeshStandardMaterial({color, roughness: 0.4, metalness: isArmored ? 0.7 : 0.5}));  body.position.y = isArmored ? 1.3 : 1.2; body.castShadow = true; g.add(body);
   const head = new THREE.Mesh(new THREE.SphereGeometry(isArmored ? 0.35 : 0.3, 8, 8), new THREE.MeshStandardMaterial({color: isArmored ? 0x5577ff : 0xaa2222, roughness: 0.3, metalness: 0.4}));
   head.position.y = isArmored ? 2.1 : 2.0; head.castShadow = true; g.add(head);
   if (isArmored) { const armorPlate = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.15), new THREE.MeshStandardMaterial({color: 0x223366, roughness: 0.3, metalness: 0.9})); armorPlate.position.set(0, 1.2, 0.4); g.add(armorPlate); }
@@ -1125,7 +1246,8 @@ function createMercenary(isElite = false) {
   const body = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.38, 1.1, 8), new THREE.MeshStandardMaterial({color: bodyColor, roughness: 0.4, metalness: 0.5}));
   body.position.y = 1.1; body.castShadow = true; g.add(body);
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 8, 8), new THREE.MeshStandardMaterial({color: isElite ? 0x005522 : 0x00aa44, roughness: 0.3}));
-  head.position.y = 1.9; head.castShadow = true; g.add(head);  const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({color: isElite ? 0x002211 : 0x005522, roughness: 0.3, metalness: 0.7}));
+  head.position.y = 1.9; head.castShadow = true; g.add(head);
+  const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({color: isElite ? 0x002211 : 0x005522, roughness: 0.3, metalness: 0.7}));
   helmet.position.y = 1.9; g.add(helmet);
   const gunGroup = new THREE.Group();
   const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.7, 8), new THREE.MeshStandardMaterial({color: 0x2a2a2a, metalness: 0.8}));
@@ -1151,7 +1273,6 @@ function shootAllyBullet(startPos, targetPos, merc) {
   allyBullets.push({mesh: bulletMesh, dir, speed: merc.isElite ? 0.55 : 0.45, life: 130, isElite: merc.isElite, damage: merc.damage});
   playSound('shot', {freq: merc.isElite ? 300 : 250});
 }
-
 function updateAllyBullets() {
   for (let i = allyBullets.length - 1; i >= 0; i--) {
     const b = allyBullets[i]; b.mesh.position.addScaledVector(b.dir, b.speed); b.life--; let hit = false;
@@ -1174,7 +1295,8 @@ function updateEnemies() {
     let targetPos = camera.position.clone(), targetDist = en.g.position.distanceTo(camera.position);
     gs.mercenaries.forEach(merc => { if (!merc.alive) return; const d = en.g.position.distanceTo(merc.g.position); if (d < targetDist) { targetDist = d; targetPos = merc.g.position.clone(); } });
     en.stateTimer--;
-    if (en.stateTimer <= 0) {      const hpPct = en.hp / en.maxHp;
+    if (en.stateTimer <= 0) {
+      const hpPct = en.hp / en.maxHp;
       if (hpPct < 0.3 && Math.random() < 0.4) { en.aiState = 'retreat'; en.stateTimer = 60 + Math.random() * 40; }
       else if (targetDist > 15 && Math.random() < 0.3) { en.aiState = 'flank'; en.flankDir = Math.random() < 0.5 ? 1 : -1; en.stateTimer = 80 + Math.random() * 60; }
       else { en.aiState = 'chase'; en.stateTimer = 40 + Math.random() * 30; }
@@ -1200,7 +1322,6 @@ function spawnWave(w) {
   const el = document.getElementById('wave-notif'); el.textContent = `WAVE ${w}`; el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 2200);
   document.getElementById('wave-txt').textContent = `WAVE ${w}`;
 }
-
 const rainCanvas = document.getElementById('rain-canvas'), rainCtx = rainCanvas.getContext('2d');
 const fogOverlay = document.getElementById('fog-overlay'), stormFlash = document.getElementById('storm-flash');
 const rainDrops = []; let weatherState = {type: 'clear', intensity: 0, transition: 0, stormTimer: 0, changeTimer: 0};
@@ -1223,7 +1344,8 @@ function updateWeather() {
   scene.fog.density = fogDensity; fogOverlay.style.opacity = fogOpacity;
   if (weatherState.type === 'rain' || weatherState.type === 'lightRain' || weatherState.type === 'storm') {
     const maxDrops = weatherState.type === 'storm' ? 300 : weatherState.type === 'rain' ? 150 : 60;
-    const spawnRate = weatherState.type === 'storm' ? 8 : weatherState.type === 'rain' ? 4 : 2;    while (rainDrops.length < maxDrops && Math.random() < spawnRate / 60) { rainDrops.push({x: Math.random() * rainCanvas.width, y: -10, speed: 8 + Math.random() * (weatherState.type === 'storm' ? 12 : 6), length: 15 + Math.random() * 20, opacity: 0.3 + Math.random() * 0.4}); }
+    const spawnRate = weatherState.type === 'storm' ? 8 : weatherState.type === 'rain' ? 4 : 2;
+    while (rainDrops.length < maxDrops && Math.random() < spawnRate / 60) { rainDrops.push({x: Math.random() * rainCanvas.width, y: -10, speed: 8 + Math.random() * (weatherState.type === 'storm' ? 12 : 6), length: 15 + Math.random() * 20, opacity: 0.3 + Math.random() * 0.4}); }
     for (let i = rainDrops.length - 1; i >= 0; i--) { const d = rainDrops[i]; d.y += d.speed; if (d.y > rainCanvas.height) { d.y = -10; d.x = Math.random() * rainCanvas.width; } }
   } else rainDrops.length = 0;
   if (weatherState.type === 'storm' && weatherState.stormTimer > 0) {
@@ -1248,8 +1370,7 @@ function shoot() {
   const ff = document.getElementById('fire-flash'); ff.style.opacity = '1'; setTimeout(() => ff.style.opacity = '0', 45);
   const w = document.getElementById('weapon'); w.style.transform = 'translate(8px,-8px) rotate(-4deg)'; setTimeout(() => w.style.transform = '', 100);
   let best = null, bd = Infinity;
-  enemies.filter(e => e.alive).forEach(en => { const p = en.g.position.clone().add(new THREE.Vector3(0, 1.5, 0)).project(camera); const d = Math.sqrt(p.x * p.x + p.y * p.y), wd = camera.position.distanceTo(en.g.position); if (d < AIM && wd < (weapon.name === 'شوتجان' ? 20 : 45) && d < bd) { bd = d; best = en; } });
-  let baseDmg = weapon.damage; if (gs.damageBoost) baseDmg = Math.floor(baseDmg * 1.5);
+  enemies.filter(e => e.alive).forEach(en => { const p = en.g.position.clone().add(new THREE.Vector3(0, 1.5, 0)).project(camera); const d = Math.sqrt(p.x * p.x + p.y * p.y), wd = camera.position.distanceTo(en.g.position); if (d < AIM && wd < (weapon.name === 'شوتجان' ? 20 : 45) && d < bd) { bd = d; best = en; } });  let baseDmg = weapon.damage; if (gs.damageBoost) baseDmg = Math.floor(baseDmg * 1.5);
   if (gs.temporaryWeapon) { if (gs.temporaryWeapon.rarity === 'legendary') baseDmg = Math.floor(baseDmg * 1.5); else if (gs.temporaryWeapon.rarity === 'rare') baseDmg = Math.floor(baseDmg * 1.15); }
   if (best) {
     const headPos = best.g.position.clone().add(new THREE.Vector3(0, 2.1, 0)); const headScreen = headPos.clone().project(camera); const crosshairScreen = new THREE.Vector3(0, 0, 0).project(camera);
@@ -1272,7 +1393,8 @@ function shoot() {
           en.hp -= finalDmg; en.hit = 8; showDamageNumber(en.g.position.clone().add(new THREE.Vector3(0, 2.5, 0)), finalDmg, false);
           if (en.hp <= 0) killEnemy(en); else updateEnemyBar(en);
         }
-      });    }
+      });
+    }
   }
 }
 
@@ -1297,7 +1419,6 @@ function spawnLoot(pos, forceRarity = null) {
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), new THREE.MeshStandardMaterial({color: color, emissive: color, emissiveIntensity: type === 'normal' ? 0.3 : 0.8, transparent: true, opacity: 0.9}));
   mesh.position.copy(pos); mesh.position.y = 0.5; scene.add(mesh); lootDrops.push({mesh, type, name, effect, spawnTime: Date.now(), duration});
 }
-
 function showLootNotification(text, color) {
   const el = document.getElementById('loot-notification'); if (!el) return;
   el.textContent = text; el.style.color = color; el.style.borderColor = color; el.style.opacity = '1'; el.style.transform = 'translateX(-50%) scale(1.1)';
@@ -1321,7 +1442,8 @@ function updateLoot() {
         showLootNotification(`🎁 حصلت على: ${gs.temporaryWeapon.name}!`, rarity === 'legendary' ? '#ffd700' : '#0088ff'); playSound('loot_rare');
       }
       playSound('loot'); scene.remove(loot.mesh); lootDrops.splice(i, 1); updateInventoryUI();
-    } else if (now - loot.spawnTime > loot.duration) { scene.remove(loot.mesh); lootDrops.splice(i, 1); }  }
+    } else if (now - loot.spawnTime > loot.duration) { scene.remove(loot.mesh); lootDrops.splice(i, 1); }
+  }
   if (gs.temporaryWeapon && now > gs.temporaryWeapon.expiry) {
     const prev = gs.temporaryWeapon.prevWeapon; const prevAmmo = gs.temporaryWeapon.prevAmmo; const prevReserve = gs.temporaryWeapon.prevReserve;
     gs.temporaryWeapon = null; currentWeapon = prev; gs.ammo = prevAmmo; gs.reserve = prevReserve; gs.maxAmmo = weapons[prev].clipSize; updateAmmoUI();
@@ -1346,8 +1468,7 @@ function updateGrenades() {
   }
 }
 function explodeGrenade(grenade) {
-  grenade.exploded = true; const explosionLight = new THREE.PointLight(0xff6600, 6, 12); explosionLight.position.copy(grenade.position); scene.add(explosionLight); setTimeout(() => scene.remove(explosionLight), 400);
-  sparks(grenade.position, 25, 0xff6600, 0xff8800); shake = 0.35;
+  grenade.exploded = true; const explosionLight = new THREE.PointLight(0xff6600, 6, 12); explosionLight.position.copy(grenade.position); scene.add(explosionLight); setTimeout(() => scene.remove(explosionLight), 400);  sparks(grenade.position, 25, 0xff6600, 0xff8800); shake = 0.35;
   enemies.forEach(enemy => { if (!enemy.alive) return; const distance = enemy.g.position.distanceTo(grenade.position); if (distance < 6) { const damage = Math.floor(90 * (1 - distance / 6)); enemy.hp -= damage; enemy.hit = 18; showDamageNumber(enemy.g.position.clone().add(new THREE.Vector3(0, 2.5, 0)), damage, false); if (enemy.hp <= 0) killEnemy(enemy); else updateEnemyBar(enemy); } });
   scene.remove(grenade.mesh); grenades.splice(grenades.indexOf(grenade), 1); playSound('explosion'); setTimeout(() => { if (grenadeCount < 3) { grenadeCount++; updateGrenadeUI(); } }, 8000);
 }
@@ -1370,6 +1491,7 @@ function buyHealth() {
     playSound('ui', {freq: 800}); showKillstreak(`💚 استعدت ${Math.round(hpPercent*100)}% من الصحة!`); saveGame();
   } else playSound('ui', {freq: 150});
 }
+
 function buySpeedBoost() {
   if (gs.score >= 500) {
     gs.score -= 500; gs.speedBoost = true;
@@ -1395,8 +1517,7 @@ function startReload() {
   const rb = document.getElementById('reload-bar'), rp = document.getElementById('reload-prog');
   if (rb && rp) { rb.style.display = 'block'; rp.style.width = '0%'; const w = weapons[currentWeapon], reloadMult = 1 - (w.upgrades?.reload || 0) * 0.08; const duration = 1.4 * reloadMult; requestAnimationFrame(() => { rp.style.transition = `width ${duration}s linear`; rp.style.width = '100%'; }); }
   playSound('reload');
-}
-function finishReload() {
+}function finishReload() {
   const weapon = weapons[currentWeapon]; const n = weapon.clipSize - gs.ammo, t = Math.min(n, weapon.reserveAmmo);
   gs.ammo += t; weapon.reserveAmmo -= t; weapon.currentClip = gs.ammo; gs.reserve = weapon.reserveAmmo; gs.reloading = false;
   const rb = document.getElementById('reload-bar'); if (rb) rb.style.display = 'none'; updateAmmoUI();
@@ -1419,7 +1540,8 @@ function takeDamage(d) {
     equippedArmor.hp -= armorDmg;
     
     if (equippedArmor.hp <= 0) {
-      equippedArmor.hp = 0;      equippedArmor.equipped = false;
+      equippedArmor.hp = 0;
+      equippedArmor.equipped = false;
       playSound('armor_break');
       showKillstreak('💥 انكسر الدرع!');
       updateInventoryUI();
@@ -1444,7 +1566,6 @@ function incrementCombo() {
   comboTimer = setTimeout(() => { comboCount = 0; if (el) el.style.opacity = '0'; }, 3000);
 }
 function showKillstreak(text) { const el = document.getElementById('killstreak-ui'); if (!el) return; el.textContent = text; el.style.opacity = '1'; el.style.transform = 'translate(-50%,-50%) scale(1.2)'; setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translate(-50%,-50%) scale(1)'; }, 2000); }
-
 const achievements = { firstKill: {unlocked: false, title: 'أول دم', description: 'اقتل أول عدو'}, kill10: {unlocked: false, title: 'جندي متمرس', description: 'اقتل 10 أعداء'}, kill50: {unlocked: false, title: 'آلة قتل', description: 'اقتل 50 عدو'}, wave10: {unlocked: false, title: 'محارب الموجات', description: 'وصل للموجة 10'}, combo5: {unlocked: false, title: 'سفاح', description: 'احصل على 5 قتلات متتالية'} };
 function checkAchievements() {
   if (!achievements.firstKill.unlocked && gs.kills >= 1) unlockAchievement('firstKill');
@@ -1468,7 +1589,8 @@ document.addEventListener('touchmove', e => {
     if (t.identifier === joy.id) {
       const dx = t.clientX - joy.sx, dy = t.clientY - joy.sy; const len = Math.sqrt(dx * dx + dy * dy), cl = Math.min(len, JMAX);
       joy.dx = len > 0 ? (-dx / len * cl / JMAX) : 0; joy.dy = len > 0 ? (dy / len * cl / JMAX) : 0;
-      const nx = len > 0 ? -dx / len * cl : 0, ny = len > 0 ? dy / len * cl : 0;      jKnob.style.transform = `translate(calc(-50% + ${nx}px), calc(-50% + ${ny}px))`;
+      const nx = len > 0 ? -dx / len * cl : 0, ny = len > 0 ? dy / len * cl : 0;
+      jKnob.style.transform = `translate(calc(-50% + ${nx}px), calc(-50% + ${ny}px))`;
     }
     if (t.identifier === look.id) {
       const diffX = (t.clientX - look.lx) * 0.0055, diffY = (t.clientY - look.ly) * 0.0045;
@@ -1493,8 +1615,7 @@ document.getElementById('fire-btn').addEventListener('touchcancel', handleFireEn
 document.getElementById('reload-btn').addEventListener('touchstart', e => { e.preventDefault(); startReload(); }, {passive: false});
 
 const keys = {};
-document.addEventListener('keydown', e => {
-  keys[e.code] = true;
+document.addEventListener('keydown', e => {  keys[e.code] = true;
   if (e.code === 'Space' || e.code === 'KeyF') { isFiring = true; const w = weapons[currentWeapon]; if (w.autoFire) { shoot(); autoFireInterval = setInterval(() => { if (isFiring && gs.running) shoot(); }, w.fireRate * 15); } else shoot(); }
   if (e.code === 'KeyR') startReload(); if (e.code === 'KeyG') throwGrenade(); if (e.code === 'KeyM') deployMercenary();
   if (e.code === 'Digit1') equipWeapon('pistol'); if (e.code === 'Digit2') equipWeapon('shotgun'); if (e.code === 'Digit3') equipWeapon('ak47');
@@ -1517,7 +1638,8 @@ function updatePlayer() {
     gs.stepTimer--; if (gs.stepTimer <= 0) { playSound('step'); gs.stepTimer = 25; }
   }
   const newX = camera.position.x + pVelX; const newZ = camera.position.z + pVelZ;
-  if (!checkCollision(newX, camera.position.z, 0.5)) camera.position.x = newX; else pVelX = 0;  if (!checkCollision(camera.position.x, newZ, 0.5)) camera.position.z = newZ; else pVelZ = 0;
+  if (!checkCollision(newX, camera.position.z, 0.5)) camera.position.x = newX; else pVelX = 0;
+  if (!checkCollision(camera.position.x, newZ, 0.5)) camera.position.z = newZ; else pVelZ = 0;
   pVelX *= FRICTION; pVelZ *= FRICTION; const B = AR - 1.5;
   if (camera.position.x < -B) { camera.position.x = -B; pVelX = 0; } if (camera.position.x > B) { camera.position.x = B; pVelX = 0; }
   if (camera.position.z < -B) { camera.position.z = -B; pVelZ = 0; } if (camera.position.z > B) { camera.position.z = B; pVelZ = 0; }
@@ -1542,8 +1664,7 @@ function shootEnemyBullet(startPos, targetPos) {
   bulletMesh.position.copy(startPos); bulletMesh.position.y += 1.2; const dir = new THREE.Vector3().copy(targetPos).sub(bulletMesh.position).normalize();
   scene.add(bulletMesh); enemyBullets.push({mesh: bulletMesh, dir, speed: 0.4, life: 130}); playSound('shot', {freq: 150});
 }
-function updateEnemyBullets() {
-  for (let i = enemyBullets.length - 1; i >= 0; i--) {
+function updateEnemyBullets() {  for (let i = enemyBullets.length - 1; i >= 0; i--) {
     const b = enemyBullets[i]; b.mesh.position.addScaledVector(b.dir, b.speed); b.life--;
     if (b.mesh.position.distanceTo(camera.position) < 1.0) { takeDamage(4 + Math.random() * 5); scene.remove(b.mesh); enemyBullets.splice(i, 1); continue; }
     if (b.life <= 0) { scene.remove(b.mesh); enemyBullets.splice(i, 1); }
@@ -1566,14 +1687,14 @@ function updateMercenaries() {
       }
     }
     
-    let target = null, maxThreat = -1;    enemies.forEach(en => { if (!en.alive) return; const distToMerc = merc.g.position.distanceTo(en.g.position); const distToPlayer = en.g.position.distanceTo(camera.position); if (distToMerc < 50) { let threat = (100 / distToMerc); if (en.isArmored) threat += 50; if (distToPlayer < distToMerc) threat += 30; if (threat > maxThreat) { maxThreat = threat; target = en; } } });
+    let target = null, maxThreat = -1;
+    enemies.forEach(en => { if (!en.alive) return; const distToMerc = merc.g.position.distanceTo(en.g.position); const distToPlayer = en.g.position.distanceTo(camera.position); if (distToMerc < 50) { let threat = (100 / distToMerc); if (en.isArmored) threat += 50; if (distToPlayer < distToMerc) threat += 30; if (threat > maxThreat) { maxThreat = threat; target = en; } } });
     
     if (target) {
       merc.g.rotation.y = Math.atan2(target.g.position.x - merc.g.position.x, target.g.position.z - merc.g.position.z);
       
       let moveTarget = target.g.position.clone();
       let shouldShoot = true;
-      // زيادة سرعة المرتزقة (من 0.025/0.02 إلى 0.045/0.035)
       let moveSpeed = merc.isElite ? 0.045 : 0.035;
       
       if (merc.command === 'attack') {
@@ -1592,8 +1713,7 @@ function updateMercenaries() {
         moveTarget = camera.position.clone();
         shouldShoot = false;
         moveSpeed *= 1.3;
-      } else {
-        let separation = new THREE.Vector3();
+      } else {        let separation = new THREE.Vector3();
         gs.mercenaries.forEach(other => { if (other === merc || !other.alive) return; const dist = merc.g.position.distanceTo(other.g.position); if (dist < 1.5) { const push = merc.g.position.clone().sub(other.g.position).normalize().multiplyScalar(0.05); separation.add(push); } });
         
         const distToTarget = merc.g.position.distanceTo(target.g.position);
@@ -1615,7 +1735,8 @@ function updateMercenaries() {
           if (!checkCollision(newX, newZ, 0.5)) { merc.g.position.x = newX; merc.g.position.z = newZ; }
         }
       }
-            if (shouldShoot) {
+      
+      if (shouldShoot) {
         merc.shootTimer--; if (merc.shootTimer <= 0) { merc.shootTimer = (merc.isElite ? 35 : 25) + Math.random() * 25; shootAllyBullet(merc.g.position, target.g.position, merc); }
       }
     }
@@ -1641,8 +1762,7 @@ function deployMercenary() {
 
 function saveGame() {
   const data = { score: gs.score, wave: gs.wave, kills: gs.kills, maxHp: gs.maxHp, movementEnhanced: gs.movementEnhanced, mercenariesInventory: gs.mercenariesInventory, eliteMercenariesInventory: gs.eliteMercenariesInventory, weapons: {}, achievements: {}, shopLevel: gs.shopLevel, armors: gs.armors };
-  Object.keys(weapons).forEach(k => { const w = weapons[k]; data.weapons[k] = {owned: w.owned, currentClip: w.currentClip, reserveAmmo: w.reserveAmmo, upgrades: w.upgrades}; });
-  Object.keys(achievements).forEach(k => { data.achievements[k] = achievements[k].unlocked; });
+  Object.keys(weapons).forEach(k => { const w = weapons[k]; data.weapons[k] = {owned: w.owned, currentClip: w.currentClip, reserveAmmo: w.reserveAmmo, upgrades: w.upgrades}; });  Object.keys(achievements).forEach(k => { data.achievements[k] = achievements[k].unlocked; });
   try { localStorage.setItem('shadowOps_save', JSON.stringify(data)); } catch(e) {}
 }
 function loadGame() {
@@ -1664,7 +1784,8 @@ function animate() {
       if (gs.cd > 0) gs.cd--; if (gs.reloading) { gs.reloadTmr--; if (gs.reloadTmr <= 0) finishReload(); }
       if (gs.temporaryWeapon && document.getElementById('inventory-ui').style.display === 'flex') { const timerEl = document.getElementById('temp-weapon-timer'); if (timerEl) timerEl.textContent = Math.max(0, Math.ceil((gs.temporaryWeapon.expiry - Date.now()) / 1000)); }
       
-      const mercCmds = document.getElementById('merc-commands');      if (mercCmds) {
+      const mercCmds = document.getElementById('merc-commands');
+      if (mercCmds) {
         const activeMercs = gs.mercenaries.filter(m => m.alive).length;
         mercCmds.style.display = activeMercs > 0 ? 'flex' : 'none';
       }
@@ -1676,22 +1797,6 @@ animate();
 
 function startGame() { initAudio(); loadGame(); initWeather(); resizeRainCanvas(); document.getElementById('menu').style.display = 'none'; resetGame(); }
 function retryGame() { document.getElementById('gameover').style.display = 'none'; resetGame(); }
-
-function newGame() {
-  if (!confirm('هل تريد بدء لعبة جديدة؟\n\n✅ ستحتفظ بـ:\n- جميع الأسلحة المشتراة\n- الترقيات (الملحقات)\n- الإنجازات\n- المرتزقة في المخزون\n- مستوى المتجر والدروع\n\n❌ سيتم تصفير:\n- الموجة → 1\n- النقاط → 0\n- القتلى → 0')) return;
-  gs.wave = 1; gs.score = 0; gs.kills = 0; gs.hp = gs.maxHp; gs.mercenaries = []; gs.mercenaryCount = 0;
-  Object.keys(weapons).forEach(key => { const w = weapons[key]; if (w.owned) { w.currentClip = w.clipSize; w.reserveAmmo = w.reserve; } });
-  saveGame(); document.getElementById('gameover').style.display = 'none'; resetGame();
-}
-
-function resetAllProgress() {
-  if (!confirm('⚠️ تحذير: سيتم مسح كل التقدم نهائياً!\n\nسيتم حذف:\n- جميع الأسلحة المشتراة\n- جميع الترقيات\n- جميع الإنجازات\n- جميع المرتزقة\n- النقاط والمستوى\n- مستوى المتجر والدروع\n\nهل أنت متأكد؟')) return;
-  try { localStorage.removeItem('shadowOps_save'); } catch(e) {}
-  gs.score = 0; gs.wave = 1; gs.kills = 0; gs.maxHp = 100; gs.hp = 100; gs.movementEnhanced = false; gs.mercenariesInventory = 0; gs.eliteMercenariesInventory = 0; gs.mercenaries = []; gs.mercenaryCount = 0; gs.shopLevel = 1; gs.armors = [];
-  Object.keys(weapons).forEach(key => { const w = weapons[key]; w.owned = (key === 'pistol'); w.currentClip = w.clipSize; w.reserveAmmo = w.reserve; w.upgrades = {damage: 0, mag: 0, reload: 0}; });
-  Object.keys(achievements).forEach(k => { achievements[k].unlocked = false; });
-  document.getElementById('gameover').style.display = 'none'; resetGame();
-}
 
 function resetGame() {
   enemies.forEach(e => scene.remove(e.g)); enemies.length = 0; enemyBullets.forEach(b => scene.remove(b.mesh)); enemyBullets.length = 0; allyBullets.forEach(b => scene.remove(b.mesh)); allyBullets.length = 0;
@@ -1706,7 +1811,6 @@ function resetGame() {
 }
 
 window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); resizeRainCanvas(); });
-updateGrenadeUI(); updateMercenaryUI();
-</script>
+updateGrenadeUI(); updateMercenaryUI();</script>
 </body>
-</html>
+    </html>
